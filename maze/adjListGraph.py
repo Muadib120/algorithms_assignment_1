@@ -61,8 +61,7 @@ class AdjListGraph(Graph):
 
 
     def updateWall(self, vert1:Coordinates, vert2:Coordinates, wallStatus:bool)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        # 
         edgeFound = False
         if vert1.isAdjacent(vert2):
             for edge in self.graph[vert1]:
@@ -82,8 +81,7 @@ class AdjListGraph(Graph):
 
 
     def removeEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        # Removes edge from vert1 to vert2 in both directions
         edgeRemoved = False
         if vert1.isAdjacent(vert2):
             for edge in self.graph[vert1]:
@@ -99,14 +97,13 @@ class AdjListGraph(Graph):
 
 
     def hasVertex(self, label:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        # Return vertex found in graph, false otherwise
         return label in self.graph
 
 
 
     def hasEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        #
+        # returns true if there is an edge between vert1 coordinate and vert2 coordinate
         hasEdge = False
         for edge in self.graph[vert1]:
             if vert2 in edge:
