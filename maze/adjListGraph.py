@@ -68,15 +68,17 @@ class AdjListGraph(Graph):
             for edge in self.graph[vert1]:
                 if vert2 in edge:
                     edge[vert2] = wallStatus
+                    print("edge updated 1"+ str(edge[vert2]) + " " + str(wallStatus))
                     edgeFound = True
 
             for edge in self.graph[vert2]:
                 if vert1 in edge:
                     edge[vert1] = wallStatus
+                    print("edge updated 2"+ str(edge[vert1]) + " " + str(wallStatus))
+
                     edgeFound = True
 
         return edgeFound
-
 
 
     def removeEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
@@ -92,7 +94,7 @@ class AdjListGraph(Graph):
                 if vert1 in edge:
                     del edge
                     edgeRemoved = True
-                    print("edge removed")
+                    
         return edgeRemoved 
 
 
@@ -104,36 +106,30 @@ class AdjListGraph(Graph):
 
 
     def hasEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        #
         hasEdge = False
-
         for edge in self.graph[vert1]:
             if vert2 in edge:
                 hasEdge = True
-            
+
         return hasEdge
 
 
 
     def getWallStatus(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
-        wallstatusRetrieved = False
-
+        # returns the status of the designated edge
         for edge in self.graph[vert1]:
             if vert2 in edge:
-                wallstatusRetrieved = True
-        
-        return wallstatusRetrieved
+                return edge[vert2]
+       
+        return False
     
 
     def neighbours(self, label:Coordinates)->List[Coordinates]:
-        ### Implement me! ###
-        # remember to return list of coordinates
+        # returns a list of coordinates that are neighbours to the label coordinate
         coords = list()
         for edge in self.graph[label]:
-            for coordinate in edge:
+            for coordinate in edge:              
                 coords.append(coordinate)
 
         return coords

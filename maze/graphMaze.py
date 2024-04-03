@@ -101,6 +101,7 @@ class GraphMaze(Maze):
 
 
     def neighbours(self, cell:Coordinates)->List[Coordinates]:
+        #print(self.m_graph.neighbours(cell))
         return self.m_graph.neighbours(cell)
 
 
