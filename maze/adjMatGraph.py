@@ -2,7 +2,7 @@
 # Please COMPLETE the IMPLEMENTATION of this class.
 # Adjacent matrix implementation.
 #
-# __author__ = 'Jeffrey Chan', <YOU>
+# __author__ = 'Jeffrey Chan', 'Benjamin Hatfield'
 # __copyright__ = 'Copyright 2024, RMIT University'
 # ------------------------------------------------------------------------
 
