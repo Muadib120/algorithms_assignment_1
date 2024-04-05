@@ -20,111 +20,78 @@ class AdjListGraph(Graph):
     """
 
     def __init__(self):
-        ### Implement me! ###
+        # Empty Dictionary for adding vertices and their respective edges
         self.graph = {}
 
 
         
     def addVertex(self, label:Coordinates):
-        ### Implement me! ###
+        # Adds a vertex to the graph
         if label not in self.graph:
-            self.graph[label] = list()
+            self.graph[label] = {}
 
 
     def addVertices(self, vertLabels:List[Coordinates]):
-        ### Implement me! ###
+        # Adds multiple Vertices to the graph, each dictionary value is another dictionary to be filled with edges 
         for label in vertLabels:
             if label not in self.graph:
-                self.graph[label] = list()
+                self.graph[label] = {}
 
 
 
     def addEdge(self, vert1:Coordinates, vert2:Coordinates, addWall:bool = False)->bool:
-        ### Implement me! ###
-        # remember to return booleans
-        edgeNotValid = False
-
-        for edge in self.graph[vert1]:
-            if vert2 in edge:
-                edgeNotValid = True
-
-        for edge in self.graph[vert2]:
-            if vert1 in edge:
-                edgeNotValid = True
+        # Adds edges in the form of dictionary keys with wall status being the value 
+        # Checks if each vertex is adjacent so only adjacent vertices are added 
+        if vert1 not in self.graph[vert2] and vert2 not in self.graph[vert1] and vert1.isAdjacent(vert2):
+            self.graph[vert1][vert2] = addWall
+            self.graph[vert2][vert1] = addWall
+            return True
         
-        if not edgeNotValid and vert1.isAdjacent(vert2):
-            self.graph[vert1].append({vert2:addWall})
-            self.graph[vert2].append({vert1:addWall})
+        return False
         
-        return not edgeNotValid
-        
-
 
     def updateWall(self, vert1:Coordinates, vert2:Coordinates, wallStatus:bool)->bool:
-        # 
-        edgeFound = False
-        if vert1.isAdjacent(vert2):
-            for edge in self.graph[vert1]:
-                if vert2 in edge:
-                    edge[vert2] = wallStatus
-                    edgeFound = True
-
-            for edge in self.graph[vert2]:
-                if vert1 in edge:
-                    edge[vert1] = wallStatus
-                    edgeFound = True
-
-        return edgeFound
+        # updates wall status of respective edge (both directions) if the edge already exists 
+        if self.hasEdge(vert1,vert2):
+            self.graph[vert1][vert2] = wallStatus
+            self.graph[vert2][vert1] = wallStatus
+            return True
+        return False
 
 
     def removeEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        # Removes edge from vert1 to vert2 in both directions
-        edgeRemoved = False
-        if vert1.isAdjacent(vert2):
-            for edge in self.graph[vert1]:
-                if vert2 in edge:
-                    del edge
-                    edgeRemoved = True
-            for edge in self.graph[vert2]:
-                if vert1 in edge:
-                    del edge
-                    edgeRemoved = True
+        # Removes respective edge (both directions) if the edge exists 
+        # returns true if removed, false otherwise 
+        if self.hasEdge(vert1,vert2):
+            del self.graph[vert1][vert2]
+            del self.graph[vert2][vert1]
+            return True
                     
-        return edgeRemoved 
+        return False
 
 
     def hasVertex(self, label:Coordinates)->bool:
-        # Return vertex found in graph, false otherwise
+        # Returns whether vertex found in graph
         return label in self.graph
 
 
-
     def hasEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        # returns true if there is an edge between vert1 coordinate and vert2 coordinate
-        hasEdge = False
-        for edge in self.graph[vert1]:
-            if vert2 in edge:
-                hasEdge = True
-
-        return hasEdge
-
+        # checks for edge in both directions and returns result
+        return vert1 in self.graph[vert2] and vert2 in self.graph[vert1]
 
 
     def getWallStatus(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        # returns the status of the designated edge
-        for edge in self.graph[vert1]:
-            if vert2 in edge:
-                return edge[vert2]
-       
+        # returns the status of the wall between the designated edge
+        if self.hasEdge(vert1,vert2):
+            return self.graph[vert1][vert2]
         return False
     
 
     def neighbours(self, label:Coordinates)->List[Coordinates]:
         # returns a list of coordinates that are neighbours to the label coordinate
-        coords = list()
-        for edge in self.graph[label]:
-            for coordinate in edge:              
-                coords.append(coordinate)
+        coords = []
+        for edge in self.graph[label]:             
+                coords.append(edge)
 
         return coords
         

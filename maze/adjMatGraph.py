@@ -20,113 +20,86 @@ class AdjMatGraph(Graph):
     """
 
     def __init__(self):
-        ### Implement me! ###
         self.vertices = {}
         self.numVertices = 0
-        self.graphSetup = False
-        self.graph = []
-
+        self.graph = None
 
 
     def addVertex(self, label:Coordinates):
-        ### Implement me! ###
+        # Add vertex to vertices dictionary, value is the index to be used in the edge matrix 
         if label not in self.vertices:
             self.vertices[label] = self.numVertices
             self.numVertices += 1
 
 
-
     def addVertices(self, vertLabels:List[Coordinates]):
-        ### Implement me! ###
+        # Add vertices to vertices dictionary, value is the index to be used in the edge matrix 
         for vertex in vertLabels:
             if vertex not in self.vertices:
                 self.vertices[vertex] = self.numVertices
                 self.numVertices += 1
 
 
-
     def addEdge(self, vert1:Coordinates, vert2:Coordinates, addWall:bool = False)->bool:
-        ### Implement me! ###
-        # remember to return booleans
-        if not self.graphSetup:
+        # If graph matrix has not been initialized, create matrix of numvertices by numvertices
+        # initial value will be -1
+        if self.graph == None:
             self.graph = [[-1 for val1 in range(self.numVertices)] for val2 in range(self.numVertices)]
-            self.graphSetup = True
 
-        if vert1 in self.vertices and vert2 in self.vertices and vert1.isAdjacent(vert2):
-            vert1Index = self.vertices[vert1]
-            vert2Index = self.vertices[vert2]
-            
-            if self.graph[vert1Index][vert2Index] == -1:
-                self.graph[vert1Index][vert2Index] = addWall
-                self.graph[vert2Index][vert1Index] = addWall
-                return True
-            else:
-                return False
+
+        # Adds edge between vert1 and vert2 if vertices are adjacent and vertices exist and edge has not already been added
+        if vert1 in self.vertices and vert2 in self.vertices and vert1.isAdjacent(vert2) and self.graph[self.vertices[vert1]][self.vertices[vert2]] == -1:
+            self.graph[self.vertices[vert1]][self.vertices[vert2]] = addWall
+            self.graph[self.vertices[vert2]][self.vertices[vert1]] = addWall
+            return True
+        else:
+            return False
             
     
-
     def updateWall(self, vert1:Coordinates, vert2:Coordinates, wallStatus:bool)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        # updates wall status of respective edge (both directions) if the edge already exists 
         if self.hasEdge(vert1,vert2):
-            vert1Index = self.vertices[vert1]
-            vert2Index = self.vertices[vert2]
-
-
-            self.graph[vert1Index][vert2Index] = wallStatus
-            self.graph[vert2Index][vert1Index] = wallStatus
+            self.graph[self.vertices[vert1]][self.vertices[vert2]] = wallStatus
+            self.graph[self.vertices[vert2]][self.vertices[vert1]] = wallStatus
             return True
         else:
             return False
     
-
 
     def removeEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        # Removes respective edge (both directions) if the edge exists 
+        # returns true if removed, false otherwise 
         if self.hasEdge(vert1,vert2):
-            vert1Index = self.vertices[vert1]
-            vert2Index = self.vertices[vert2]
-
-
-            self.graph[vert1Index][vert2Index] = -1
-            self.graph[vert2Index][vert1Index] = -1
+            self.graph[self.vertices[vert1]][self.vertices[vert2]] = -1
+            self.graph[self.vertices[vert2]][self.vertices[vert1]] = -1
             return True
         else:
             return False
         
         
-
     def hasVertex(self, label:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        # Returns whether vertex found in graph
         return label in self.vertices
 
 
-
     def hasEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
-        return self.graphSetup and self.graph[self.vertices[vert1]][self.vertices[vert2]] != -1
-
+        # checks for matrix being initiated and if edge in both directions and returns result
+        return self.graph != None and self.graph[self.vertices[vert1]][self.vertices[vert2]] != -1
 
 
     def getWallStatus(self, vert1:Coordinates, vert2:Coordinates)->bool:
-        ### Implement me! ###
-        # remember to return booleans
+        # returns the status of the wall between the designated edge
         if self.hasEdge(vert1,vert2):
             return self.graph[self.vertices[vert1]][self.vertices[vert2]]
         else:
             return False
 
 
-
     def neighbours(self, label:Coordinates)->List[Coordinates]:
-        ### Implement me! ###
-        # remember to return list of coordinates
-        adjCoords = list()
+        # return list of neighbours (current edges) to the provided label
+        adjCoords = []
         for coord in self.vertices:
-            if coord.isAdjacent(label):
+            if label.isAdjacent(coord):
                 adjCoords.append(coord)
 
         return adjCoords
