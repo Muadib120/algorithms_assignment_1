@@ -21,7 +21,7 @@ class AdjMatGraph(Graph):
 
     def __init__(self):
         ### Implement me! ###
-        self.vertices = []
+        self.vertices = {}
         self.numVertices = 0
         self.graphSetup = False
         self.graph = []
@@ -31,38 +31,17 @@ class AdjMatGraph(Graph):
     def addVertex(self, label:Coordinates):
         ### Implement me! ###
         if label not in self.vertices:
-            self.vertices.append(label)
+            self.vertices[label] = self.numVertices
             self.numVertices += 1
 
-            # if self.numVertices > 1:
-            #         for edge in self.graph:
-            #             edge.append(-1)
-
-            # temp = []
-
-            # for vert in range(self.numVertices):
-            #     temp.append(-1)
-            
-            # self.graph.append(temp)
 
 
     def addVertices(self, vertLabels:List[Coordinates]):
         ### Implement me! ###
         for vertex in vertLabels:
             if vertex not in self.vertices:
-                self.vertices.append(vertex)
+                self.vertices[vertex] = self.numVertices
                 self.numVertices += 1
-
-                # if self.numVertices > 1:
-                #     for edge in self.graph:
-                #         edge.append(-1)
-
-                # temp = []
-
-                # for vert in range(self.numVertices):
-                #     temp.append(-1)
-                
-                # self.graph.append(temp)
 
 
 
@@ -72,22 +51,30 @@ class AdjMatGraph(Graph):
         if not self.graphSetup:
             self.graph = [[-1 for val1 in range(self.numVertices)] for val2 in range(self.numVertices)]
             self.graphSetup = True
-                
-        if self.graph[self.vertices.index(vert1)][self.vertices.index(vert2)] == -1:
-            self.graph[self.vertices.index(vert1)][self.vertices.index(vert2)] = addWall
-            self.graph[self.vertices.index(vert2)][self.vertices.index(vert1)] = addWall
-            return True
-        else:
-            return False
+
+        if vert1 in self.vertices and vert2 in self.vertices and vert1.isAdjacent(vert2):
+            vert1Index = self.vertices[vert1]
+            vert2Index = self.vertices[vert2]
+            
+            if self.graph[vert1Index][vert2Index] == -1:
+                self.graph[vert1Index][vert2Index] = addWall
+                self.graph[vert2Index][vert1Index] = addWall
+                return True
+            else:
+                return False
             
     
 
     def updateWall(self, vert1:Coordinates, vert2:Coordinates, wallStatus:bool)->bool:
         ### Implement me! ###
         # remember to return booleans
-        if vert1 in self.vertices and vert2 in self.vertices:
-            self.graph[self.vertices.index(vert1)][self.vertices.index(vert2)] = wallStatus
-            self.graph[self.vertices.index(vert2)][self.vertices.index(vert1)] = wallStatus
+        if self.hasEdge(vert1,vert2):
+            vert1Index = self.vertices[vert1]
+            vert2Index = self.vertices[vert2]
+
+
+            self.graph[vert1Index][vert2Index] = wallStatus
+            self.graph[vert2Index][vert1Index] = wallStatus
             return True
         else:
             return False
@@ -97,9 +84,13 @@ class AdjMatGraph(Graph):
     def removeEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
         ### Implement me! ###
         # remember to return booleans
-        if vert1 in self.vertices and vert2 in self.vertices:
-            self.graph[self.vertices.index(vert1)][self.vertices.index(vert2)] = -1
-            self.graph[self.vertices.index(vert2)][self.vertices.index(vert1)] = -1
+        if self.hasEdge(vert1,vert2):
+            vert1Index = self.vertices[vert1]
+            vert2Index = self.vertices[vert2]
+
+
+            self.graph[vert1Index][vert2Index] = -1
+            self.graph[vert2Index][vert1Index] = -1
             return True
         else:
             return False
@@ -116,15 +107,15 @@ class AdjMatGraph(Graph):
     def hasEdge(self, vert1:Coordinates, vert2:Coordinates)->bool:
         ### Implement me! ###
         # remember to return booleans
-        return vert1 in self.vertices and vert2 in self.vertices
+        return self.graphSetup and self.graph[self.vertices[vert1]][self.vertices[vert2]] != -1
 
 
 
     def getWallStatus(self, vert1:Coordinates, vert2:Coordinates)->bool:
         ### Implement me! ###
         # remember to return booleans
-        if vert1 in self.vertices and vert2 in self.vertices:
-            return self.graph[self.vertices.index(vert1)][self.vertices.index(vert2)]
+        if self.hasEdge(vert1,vert2):
+            return self.graph[self.vertices[vert1]][self.vertices[vert2]]
         else:
             return False
 

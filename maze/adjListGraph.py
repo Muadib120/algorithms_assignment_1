@@ -67,14 +67,11 @@ class AdjListGraph(Graph):
             for edge in self.graph[vert1]:
                 if vert2 in edge:
                     edge[vert2] = wallStatus
-                    print("edge updated 1"+ str(edge[vert2]) + " " + str(wallStatus))
                     edgeFound = True
 
             for edge in self.graph[vert2]:
                 if vert1 in edge:
                     edge[vert1] = wallStatus
-                    print("edge updated 2"+ str(edge[vert1]) + " " + str(wallStatus))
-
                     edgeFound = True
 
         return edgeFound
