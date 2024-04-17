@@ -1,10 +1,10 @@
 {
-  "dataStructure": "adjmat",
-  "rowNum": 10,
-  "colNum": 10,
+  "dataStructure": "array",
+  "rowNum": 1,
+  "colNum": 1,
   "entrances": [[0,-1]],
   "exits": [[-1,0]],
   "generator": "recur",
-  "visualise": true,
+  "visualise": false,
   "numPasses": 10
 }
