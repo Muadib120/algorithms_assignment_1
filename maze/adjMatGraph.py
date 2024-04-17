@@ -99,7 +99,7 @@ class AdjMatGraph(Graph):
         # return list of neighbours (current edges) to the provided label
         adjCoords = []
         for coord in self.vertices:
-            if label.isAdjacent(coord):
+            if self.hasEdge(label,coord):
                 adjCoords.append(coord)
 
         return adjCoords
